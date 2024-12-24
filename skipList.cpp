@@ -25,81 +25,70 @@ class SkipList {
     float p;
     int level;
     Node* header;
-
+    
     int randomLevel() {
         int lvl = 0;
-        while (((float)rand() / RAND_MAX) < p && lvl < maxLevel) {
+        while (((float)rand() / RAND_MAX) < p && lvl < maxLevel) 
             lvl++;
-        }
         return lvl;
     }
-
 public:
     SkipList(int maxLevel, float p) : maxLevel(maxLevel), p(p), level(0) {
         header = new Node(-1, maxLevel);
     }
-
     ~SkipList() {
         delete header;
     }
-
     void insert(int key) {
-    Node* current = header;
-    Node** update = new Node*[maxLevel + 1];
-    for (int i = 0; i <= maxLevel; i++) {
-        update[i] = nullptr;
-    }
-    for (int i = level; i >= 0; i--) {
-        while (current->forward[i] != nullptr && current->forward[i]->key < key) {
-            current = current->forward[i];
+        Node* current = header;
+        Node** update = new Node*[maxLevel + 1];
+        for (int i = 0; i <= maxLevel; i++)
+            update[i] = nullptr;
+        for (int i = level; i >= 0; i--) {// traverse all the levels till reaching the correct position to insert in 
+            while (current->forward[i] != nullptr && current->forward[i]->key < key)
+                current = current->forward[i];//move forward if the next key if less than the one to be inserted
+            update[i] = current;//update with the new node
         }
-        update[i] = current;
-    }
-    current = current->forward[0];
-    if (current == nullptr || current->key != key) {
-        int newLevel = randomLevel();
-        if (newLevel > level) {
-            for (int i = level + 1; i <= newLevel; i++) {
-                update[i] = header;
+        current = current->forward[0];//point on the level 0
+        if (current == nullptr || current->key != key) {
+            int newLevel = randomLevel();
+            if (newLevel > level) {
+                for (int i = level + 1; i <= newLevel; i++)//update the header pointer with the position of the new node will be inserted
+                    update[i] = header;
+                level = newLevel;
             }
-            level = newLevel;
+            Node* newNode = new Node(key, newLevel);
+            for (int i = 0; i <= newLevel; i++) {//update the levels with the inserted node 
+                newNode->forward[i] = update[i]->forward[i];
+                update[i]->forward[i] = newNode;
+            }
+            cout << "Inserted key: " << key << endl;
         }
-        Node* newNode = new Node(key, newLevel);
-        for (int i = 0; i <= newLevel; i++) {
-            newNode->forward[i] = update[i]->forward[i];
-            update[i]->forward[i] = newNode;
-        }
-        cout << "Inserted key: " << key << endl;
+        delete[] update;
     }
-    delete[] update;
-}
     void erase(int key) {
-    Node* current = header;
-    Node** update = new Node*[maxLevel + 1];
-    for (int i = 0; i <= maxLevel; i++) {
-        update[i] = nullptr;
-    }
-    for (int i = level; i >= 0; i--) {
-        while (current->forward[i] != nullptr && current->forward[i]->key < key) {
-            current = current->forward[i];
+        Node* current = header;
+        Node** update = new Node*[maxLevel + 1];
+        for (int i = 0; i <= maxLevel; i++) 
+            update[i] = nullptr;
+        for (int i = level; i >= 0; i--) {//search for the key's position
+            while (current->forward[i] != nullptr && current->forward[i]->key < key) 
+                current = current->forward[i];
+            update[i] = current;
         }
-        update[i] = current;
-    }
-    current = current->forward[0];
-    if (current != nullptr && current->key == key) {
-        for (int i = 0; i <= level; i++) {
-            if (update[i]->forward[i] != current) break;
-            update[i]->forward[i] = current->forward[i];
+        current = current->forward[0];
+        if (current != nullptr && current->key == key) {
+            for (int i = 0; i <= level; i++) {
+                if (update[i]->forward[i] != current) break;
+                update[i]->forward[i] = current->forward[i];//connect the previous node with the forward to delete the connection bt the key would be deleted
+            }
+            delete current;
+            while (level > 0 && header->forward[level] == nullptr)
+                level--;
+            cout << "Deleted key: " << key << endl;
         }
-        delete current;
-        
-        while (level > 0 && header->forward[level] == nullptr) {
-            level--;
-        }
-        cout << "Deleted key: " << key << endl;
+        delete[] update;
     }
-    delete[] update;
-}
 
 
     void display() {
