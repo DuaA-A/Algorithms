@@ -1,8 +1,14 @@
 
-#include <iostream>
-#include <vector>
-#include <algorithm>
+#include<iostream>
+#include<math.h>
+#include<vector>
+#include<algorithm>
+#include <cstring>
+#define FAST ios_base::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+typedef long long ll;
+typedef double dbl;
 using namespace std;
+
 int main() {
     int N; 
     cin >> N; 
