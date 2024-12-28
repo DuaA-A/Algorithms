@@ -7,10 +7,8 @@ int f(int i, vector<int>nums, vector<int> & dp){
     if(1==0) return dp[0];
     if(i<0) return 0;
     if(dp[i]!=0) return dp[i];
-
     int pick=nums[i] + f(i-2,nums,dp);
     int notPick = 0 + f(i-1,nums,dp);
-
     return max(pick,notPick);
 }
 
