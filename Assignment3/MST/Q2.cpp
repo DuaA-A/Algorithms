@@ -5,7 +5,7 @@
 
 using namespace std;
 
-class Solution {
+class CPU_tasks {
 public:
     int leastInterval(vector<char>& tasks, int n) {
         int freq[26] = {0};
@@ -35,14 +35,14 @@ int main() {
     string inputTasks;
     int n;
 
-    cout << "Enter tasks (as a string, e.g., 'AACBB'): ";
+    cout << "Enter tasks (AACBB): ";
     cin >> inputTasks;
-    cout << "Enter cooling interval n: ";
+    cout << "Enter interval n: ";
     cin >> n;
 
     vector<char> tasks(inputTasks.begin(), inputTasks.end());
 
-    Solution solution;
+    CPU_tasks solution;
 
     int result = solution.leastInterval(tasks, n);
     cout << "Minimum CPU intervals required: " << result << endl;
