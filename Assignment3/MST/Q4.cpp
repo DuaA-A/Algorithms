@@ -32,8 +32,8 @@ void Q4_MST(){
 		for(int j=t-1;j&&q[j+1].b<q[j].b;j--)swap(q[j],q[j+1]);//sorted b -->silver
 		for(int j=1;j<=n;j++)dsu[j]=j;
 		for(int j=1,x,y;s<n-1&&j<=t;j++)
-			if((x=find(q[j].x))!=(y=find(q[j].y)))dsu[x]=y,q[++s]=q[j]; // if edges not connected
-		if(s==n-1)ans=min(ans,1ll*A*a[i].a+1ll*B*q[s].b); // min of cost
+			if((x=find(q[j].x))!=(y=find(q[j].y)))dsu[x]=y,q[++s]=q[j]; 
+		if(s==n-1)ans=min(ans,1ll*A*a[i].a+1ll*B*q[s].b);
 		t=s;
 	}
 	if(ans<2e18)
