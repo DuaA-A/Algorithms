@@ -4,38 +4,46 @@
 #include<algorithm>
 #include <cstring>
 #define FAST ios_base::sync_with_stdio(0); cin.tie(0); cout.tie(0);
-typedef long long ll;
-typedef double dbl;
 using namespace std;
 
 void solve(){
-    int t, w, n; 
-    cin>>t>>w>>n; 
-    vector<int> depths(n), golds(n), timeCosts(n);
-    for (int i=0; i<n; ++i) {
-        cin>>depths[i]>>golds[i];
-        timeCosts[i]=3*w*depths[i];  
-    }
-    vector<vector<int>> dp(n + 1, vector<int>(t + 1, 0));
-    for (int i=1; i<=n; ++i) {
-        for (int remainT=0; remainT<=t; remainT++) 
-            if (timeCosts[i-1]<=remainT) 
-                dp[i][remainT] = max(dp[i-1][remainT], dp[i-1][remainT-timeCosts[i-1]]+golds[i-1]);
-            else 
-                dp[i][remainT]=dp[i-1][remainT];
-    }
-    vector<pair<int, int>> ans;
-    int remainingTime = t;
-    for (int i = n; i > 0; --i) {
-        if (dp[i][remainingTime] != dp[i - 1][remainingTime]) {
-            ans.emplace_back(depths[i - 1], golds[i - 1]);
-            remainingTime -= timeCosts[i - 1];
+ int maxt,m;
+    bool first_case=true;
+
+    while (cin>>maxt>>m) {
+        int n;
+        cin>>n;
+        vector<int> depths(n + 1), golds(n + 1), timeCosts(n + 1);
+        vector<vector<int>> dp(n + 1, vector<int>(maxt + 1, 0));
+        for (int i = 1; i <= n; i++) {
+            cin >> depths[i] >> golds[i];
+            timeCosts[i] = 3 * m * depths[i];
         }
-    }
-    cout<<dp[n][t]<<endl;                        
-    cout<<ans.size()<<endl;        
-    for (auto it = ans.rbegin(); it!=ans.rend(); ++it) 
-        cout<<it->first<<" "<<it->second<<endl; 
+        for (int i = 1; i <= n; i++) {
+            for (int j = 0; j <= maxt; j++)
+                if (timeCosts[i] <= j) 
+                    dp[i][j] = max(dp[i - 1][j], golds[i] + dp[i - 1][j - timeCosts[i]]);
+                else 
+                    dp[i][j] = dp[i - 1][j];
+        }
+        vector<int> selectedTreasures;
+        int remainingTime = maxt;
+        int totalGold = dp[n][maxt];
+        for (int i = n; i > 0; i--) {
+            if (dp[i][remainingTime] != dp[i - 1][remainingTime]) {
+                selectedTreasures.push_back(i);
+                remainingTime -= timeCosts[i];
+            }
+        }
+        if (!first_case) cout<<endl;
+        first_case = false;
+        cout << totalGold << endl;
+        cout << selectedTreasures.size() << endl;
+        for (int i = selectedTreasures.size() - 1; i >= 0; i--) {
+            int idx = selectedTreasures[i];
+            cout << depths[idx] << " " << golds[idx] << endl;
+        }
+    } 
 }
 
 int main(){
@@ -43,6 +51,6 @@ int main(){
     int t=1;
     // cin>>t;
     while(t--)
-        solve();
+    solve();
     return 0;
 }
