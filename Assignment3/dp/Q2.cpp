@@ -9,10 +9,8 @@ typedef long long ll;
 typedef double dbl;
 using namespace std;
 
-int main()
-{
-    ios_base::sync_with_stdio(0);
-    cin.tie(0);
+int main(){
+    FAST;
     ll MOD=1000000007;
     string s;cin>>s;
     vector<ll>dp(s.size()+1);
